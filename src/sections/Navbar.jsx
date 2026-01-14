@@ -1,33 +1,60 @@
-import { useState } from "react";
-import { motion } from "motion/react";
-function Navigation() {
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+
+const navLinks = [
+  { name: "Home", href: "#home" },
+  { name: "About", href: "#about" },
+  { name: "Work", href: "#work" },
+  { name: "Contact", href: "#contact" },
+];
+
+function Navigation({ activeSection }) {
   return (
     <ul className="nav-ul">
-      <li className="nav-li">
-        <a className="nav-link" href="#home">
-          Home
-        </a>
-      </li>
-      <li className="nav-li">
-        <a className="nav-link" href="#about">
-          About
-        </a>
-      </li>
-      <li className="nav-li">
-        <a className="nav-link" href="#work">
-          Work
-        </a>
-      </li>
-      <li className="nav-li">
-        <a className="nav-link" href="#contact">
-          Contact
-        </a>
-      </li>
+      {navLinks.map((link) => (
+        <li key={link.name} className="nav-li">
+          <a
+            className={`nav-link transition-colors ${activeSection === link.href.slice(1)
+              ? "text-white font-semibold underline decoration-lavender underline-offset-4"
+              : "text-neutral-400 hover:text-white"
+              }`}
+            href={link.href}
+          >
+            {link.name}
+          </a>
+        </li>
+      ))}
     </ul>
   );
 }
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const sections = ["home", "about", "work", "contact"];
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
   return (
     <div className="fixed inset-x-0 z-20 w-full backdrop-blur-lg bg-primary/40">
       <div className="mx-auto c-space max-w-7xl">
@@ -36,7 +63,7 @@ const Navbar = () => {
             href="/"
             className="text-xl font-bold transition-colors text-neutral-400 hover:text-white"
           >
-            Ali
+            Santosh
           </a>
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -49,7 +76,7 @@ const Navbar = () => {
             />
           </button>
           <nav className="hidden sm:flex">
-            <Navigation />
+            <Navigation activeSection={activeSection} />
           </nav>
         </div>
       </div>
@@ -62,7 +89,7 @@ const Navbar = () => {
           transition={{ duration: 1 }}
         >
           <nav className="pb-5">
-            <Navigation />
+            <Navigation activeSection={activeSection} />
           </nav>
         </motion.div>
       )}

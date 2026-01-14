@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
 import Alert from "../components/Alert";
 import { Particles } from "../components/Particles";
@@ -34,9 +35,9 @@ const Contact = () => {
         "template_17us8im",
         {
           from_name: formData.name,
-          to_name: "Ali",
+          to_name: "Santosh",
           from_email: formData.email,
-          to_email: "AliSanatiDev@gmail.com",
+          to_email: "santosh.v.bhikale@example.com",
           message: formData.message,
         },
         "pn-Bw_mS1_QQdofuV"
@@ -47,11 +48,18 @@ const Contact = () => {
     } catch (error) {
       setIsLoading(false);
       console.log(error);
-      showAlertMessage("danger", "Somthing went wrong!");
+      showAlertMessage("danger", "Something went wrong!");
     }
   };
   return (
-    <section className="relative flex items-center c-space section-spacing">
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: true }}
+      className="relative flex items-center c-space section-spacing"
+      id="contact"
+    >
       <Particles
         className="absolute inset-0 -z-50"
         quantity={100}
@@ -64,7 +72,7 @@ const Contact = () => {
         <div className="flex flex-col items-start w-full gap-5 mb-10">
           <h2 className="text-heading">Let's Talk</h2>
           <p className="font-normal text-neutral-400">
-            Whether you're loking to build a new website, improve your existing
+            Whether you're looking to build a new website, improve your existing
             platform, or bring a unique project to life, I'm here to help
           </p>
         </div>
@@ -102,7 +110,7 @@ const Contact = () => {
             />
           </div>
           <div className="mb-5">
-            <label htmlFor="message" className="feild-label">
+            <label htmlFor="message" className="field-label">
               Message
             </label>
             <textarea
@@ -126,7 +134,7 @@ const Contact = () => {
           </button>
         </form>
       </div>
-    </section>
+    </motion.section>
   );
 };
 
